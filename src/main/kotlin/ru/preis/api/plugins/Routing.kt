@@ -1,16 +1,14 @@
 package ru.preis.api.plugins
 
-import io.ktor.server.routing.*
 import io.ktor.server.application.*
+import io.ktor.server.routing.*
 import ru.preis.api.controller.auth.authRoutes
 import ru.preis.api.controller.rooms.messagingRoutes
-
 import ru.preis.database.unitOfWork.UnitOfWork
 import ru.preis.ru.preis.api.controller.user.resources.userRoutes
 
 
 fun Application.configureRouting() {
-    val users = listOf("John", "Kate", "Mike")
     val unitOfWork = UnitOfWork()
 
     authRoutes(unitOfWork)
@@ -21,7 +19,8 @@ fun Application.configureRouting() {
 
 
 
-
+//        val users = listOf("John", "Kate", "Mike")
+//
 //        get("/clicker") {
 //            var count: Int
 //            if (call.request.cookies["count"] != null)

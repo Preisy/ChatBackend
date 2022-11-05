@@ -1,8 +1,8 @@
 package ru.preis.api.service
 
-import ru.preis.database.model.UserDAO
-import ru.preis.database.unitOfWork.*
 import ru.preis.api.model.UserDTO
+import ru.preis.database.model.UserDAO
+import ru.preis.database.unitOfWork.UnitOfWork
 import ru.preis.ru.preis.api.service.modelConversion.ModelConverter
 
 class AuthenticationService(
@@ -18,7 +18,7 @@ class AuthenticationService(
         return res != null
     }
 
-    suspend fun signUp(user: UserDTO): Boolean { // todo сделать по нормальному
+    suspend fun signUp(user: UserDTO): Boolean {
         val res = unitOfWork.getRepository<UserDAO>().findSingleOrNull {
             it.name == user.name
         }

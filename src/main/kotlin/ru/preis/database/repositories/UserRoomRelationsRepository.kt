@@ -3,7 +3,8 @@ package ru.preis.database.repositories
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
-import ru.preis.database.model.*
+import ru.preis.database.model.UserRoomRelationDAO
+import ru.preis.database.model.UserRoomRelations
 import ru.preis.database.unitOfWork.DatabaseFactory
 import ru.preis.database.unitOfWork.DatabaseFactory.dbQuery
 
@@ -34,7 +35,7 @@ class UserRoomRelationsRepository : Repository<UserRoomRelationDAO> {
             ?.run(::resultRowToModel)
     }
 
-    override suspend fun add(el: UserRoomRelationDAO) = DatabaseFactory.dbQueryUnit<UserDAO> {
+    override suspend fun add(el: UserRoomRelationDAO) = DatabaseFactory.dbQueryUnit {
         UserRoomRelations.insert {
             it[roomId] = el.roomId
             it[userId] = el.userId

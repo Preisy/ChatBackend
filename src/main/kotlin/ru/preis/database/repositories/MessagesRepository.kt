@@ -1,14 +1,12 @@
 package ru.preis.database.repositories
 
-import io.ktor.http.*
-//import kotlinx.datetime.toKotlinLocalDateTime
-//import kotlinx.datetime.LocalDateTime
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
-import ru.preis.database.model.*
+import ru.preis.database.model.MessageDAO
+import ru.preis.database.model.Messages
+import ru.preis.database.model.Rooms
 import ru.preis.database.unitOfWork.DatabaseFactory
-//import kotlinx.datetime.toKotlinLocalDateTime
 
 class MessagesRepository : Repository<MessageDAO> {
     private fun resultRowToModel(resultRow: ResultRow): MessageDAO {
@@ -17,7 +15,7 @@ class MessagesRepository : Repository<MessageDAO> {
             roomId = resultRow[Messages.roomId],
             memberId = resultRow[Messages.memberId],
             message = resultRow[Messages.message],
-//            datetime = resultRow[Messages.datetime]
+            datetime = resultRow[Messages.dateTime]
         )
     }
 
@@ -42,9 +40,9 @@ class MessagesRepository : Repository<MessageDAO> {
 
     override suspend fun add(el: MessageDAO) {
         Messages.insert {
-            it[Messages.roomId] = el.roomId
-            it[Messages.memberId] = el.memberId
-            it[Messages.message] = el.message
+            it[roomId] = el.roomId
+            it[memberId] = el.memberId
+            it[message] = el.message
         }
     }
 

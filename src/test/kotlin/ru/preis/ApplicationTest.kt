@@ -1,11 +1,12 @@
 package ru.preis
 
-import io.ktor.http.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlin.test.*
+import io.ktor.http.*
 import io.ktor.server.testing.*
-import ru.preis.api.plugins.*
+import ru.preis.api.plugins.configureRouting
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class ApplicationTest {
     @Test

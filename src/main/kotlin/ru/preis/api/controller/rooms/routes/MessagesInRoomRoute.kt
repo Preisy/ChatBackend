@@ -1,10 +1,10 @@
 package ru.preis.api.controller.rooms.routes
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.routing.get
 import ru.preis.api.controller.rooms.resources.Rooms
 import ru.preis.api.controller.rooms.resources.SortType
 import ru.preis.api.model.MessageDTO
@@ -14,25 +14,36 @@ import ru.preis.ru.preis.api.service.modelConversion.ModelConverter
 
 fun Route.messagesInRoomRoute(unitOfWork: UnitOfWork) {
     get<Rooms.Id.Messages> { req ->
-//        val comp = when (req.sort) {
-//            SortType.DATETIME_LESS -> { it1: MessageDTO, it2: MessageDTO ->
-//                it2.datetime!!.compareTo(it1.datetime!!)
-//            }
-//            SortType.DATETIME_GREATER -> { it1: MessageDTO, it2: MessageDTO ->
-//                it1.datetime!!.compareTo(it2.datetime!!)
-//            }
-//        }
+        val comp = when (req.sort) {
+            SortType.DATETIME_LESS -> { it1: MessageDTO, it2: MessageDTO ->
+                it2.datetime!!.compareTo(it1.datetime!!)
+            }
+
+            SortType.DATETIME_GREATER -> { it1: MessageDTO, it2: MessageDTO ->
+                it1.datetime!!.compareTo(it2.datetime!!)
+            }
+        }
+        val offset = req.offset
+        val limit = req.limit
 
 
         val roomId = req.parent.id
         val messages = unitOfWork.getRepository<MessageDAO>().find {
             it.roomId == roomId
+        }.map {
+            ModelConverter.makeDTO(it)
+        }.sortedWith(comp)
+
+        if (offset >= messages.size || limit == 0) {
+            call.response.status(HttpStatusCode.RequestedRangeNotSatisfiable)
+            return@get;
         }
 
-        call.respond(
-            messages.map { ModelConverter.makeDTO(it) }
-//                .sortedWith(comp)
-        )
-
+        if (limit == null || offset + limit >= messages.size)
+            call.respond(messages.drop(offset))
+        else {
+            val a = messages.slice(offset until (offset + limit))
+            call.respond(a)
+        }
     }
 }

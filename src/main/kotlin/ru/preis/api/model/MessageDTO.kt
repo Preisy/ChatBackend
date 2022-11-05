@@ -1,7 +1,7 @@
 package ru.preis.api.model
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
-//import kotlinx.datetime.LocalDateTime
 
 
 @Serializable
@@ -10,6 +10,6 @@ data class MessageDTO(
     val roomId: Int,
     val memberId: Int,
     val message: String,
-//    val datetime: LocalDateTime? = null
+    val datetime: LocalDateTime? = null
 )
 

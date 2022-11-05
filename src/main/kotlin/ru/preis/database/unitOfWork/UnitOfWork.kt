@@ -1,12 +1,7 @@
 package ru.preis.database.unitOfWork
 
-import ru.preis.database.model.DAOModel
-import ru.preis.database.model.RoomDAO
-import ru.preis.database.model.UserDAO
-import ru.preis.database.model.MessageDAO
-import ru.preis.database.model.UserRoomRelationDAO
+import ru.preis.database.model.*
 import ru.preis.database.repositories.*
-import java.lang.ClassCastException
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 

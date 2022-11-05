@@ -1,6 +1,8 @@
 package ru.preis.database.repositories
 
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import ru.preis.database.model.UserDAO
 import ru.preis.database.model.Users
 import ru.preis.database.unitOfWork.DatabaseFactory.dbQuery
@@ -34,10 +36,10 @@ class UsersRepository : Repository<UserDAO> {
             .singleOrNull()
     }
 
-    override suspend fun add(el: UserDAO) = dbQueryUnit<UserDAO> {
+    override suspend fun add(el: UserDAO) = dbQueryUnit {
         Users.insert {
-            it[Users.name] = el.name
-            it[Users.password] = el.password
+            it[name] = el.name
+            it[password] = el.password
         }
     }
 

@@ -1,7 +1,5 @@
 package ru.preis.database.model
 
-import org.h2.constraint.ConstraintUnique
-import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 
 object Rooms : Table() {
@@ -13,7 +11,7 @@ object Rooms : Table() {
 
 data class RoomDAO(
     var adminId: Int
-): DAOModel {
+) : DAOModel {
     var id: Int? = null
         private set
 

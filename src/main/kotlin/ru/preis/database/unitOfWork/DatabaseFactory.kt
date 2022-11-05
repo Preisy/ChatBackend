@@ -2,20 +2,44 @@ package ru.preis.database.unitOfWork
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.ktor.util.*
-import kotlinx.coroutines.*
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.*
-import org.jetbrains.exposed.sql.transactions.experimental.*
-import ru.preis.database.model.*
-//import kotlinx.datetime.LocalDateTime
-//import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.coroutines.Dispatchers
+import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
+import ru.preis.database.model.Messages
+import ru.preis.database.model.Rooms
+import ru.preis.database.model.UserRoomRelations
+import ru.preis.database.model.Users
 
 
 object DatabaseFactory {
     fun init() {
         Database.connect(hikari())
 
+        initInsertions()
+    }
+
+    suspend fun <T> dbQuery(block: suspend () -> T): T =
+        newSuspendedTransaction(Dispatchers.IO) { block() }
+
+    suspend fun dbQueryUnit(block: suspend () -> Unit): Unit =
+        newSuspendedTransaction(Dispatchers.IO) { block() }
+
+    private fun hikari(): HikariDataSource {
+        val config = HikariConfig()
+        config.driverClassName = "org.h2.Driver"
+        config.jdbcUrl = "jdbc:h2:mem:test"
+        config.maximumPoolSize = 3
+        config.isAutoCommit = false
+        config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
+        config.validate()
+        return HikariDataSource(config)
+    }
+
+    private fun initInsertions() {
         transaction {
             SchemaUtils.create(Users)
             Users.insert {
@@ -50,13 +74,13 @@ object DatabaseFactory {
                 it[roomId] = 1
                 it[memberId] = 1
                 it[message] = "Hello from Sirgay!"
-//                it[datetime] = LocalDateTime.parse("2021-03-27T02:16:20").toJavaLocalDateTime()
+                it[dateTime] = "2010-06-01T22:19:44".toLocalDateTime()
             }
             Messages.insert {
                 it[roomId] = 1
                 it[memberId] = 2
                 it[message] = "Hello from Adel!"
-//                it[datetime] = LocalDateTime.parse("2021-03-27T02:16:20").toJavaLocalDateTime()
+                it[dateTime] = "2010-06-02T22:19:44".toLocalDateTime()
             } // todo сделать автоматическое добавление админа в комнату
 
             Rooms.insert {
@@ -71,25 +95,8 @@ object DatabaseFactory {
                 it[roomId] = 2
                 it[memberId] = 2
                 it[message] = "Hello from Adel 2!"
-//                it[datetime] = LocalDateTime.parse("2021-03-27T02:16:20").toJavaLocalDateTime()
+                it[dateTime] = "2010-06-03T22:19:44".toLocalDateTime()
             }
         }
-    }
-
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
-
-    suspend fun <T> dbQueryUnit(block: suspend () -> Unit): Unit =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
-
-    private fun hikari(): HikariDataSource {
-        val config = HikariConfig()
-        config.driverClassName = "org.h2.Driver"
-        config.jdbcUrl = "jdbc:h2:mem:test"
-        config.maximumPoolSize = 3
-        config.isAutoCommit = false
-        config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-        config.validate()
-        return HikariDataSource(config)
     }
 }

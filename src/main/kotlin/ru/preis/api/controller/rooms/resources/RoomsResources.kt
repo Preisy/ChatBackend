@@ -1,11 +1,15 @@
 package ru.preis.api.controller.rooms.resources
 
 import io.ktor.resources.*
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-enum class SortType(val str: String) {
-    DATETIME_LESS("-datetime"),
-    DATETIME_GREATER("+datetime")
+@Serializable
+enum class SortType {
+    @SerialName("-datetime")
+    DATETIME_LESS,
+    @SerialName("+datetime") // in uri should be %2Bdatetime
+    DATETIME_GREATER
 }
 
 @Serializable
@@ -21,9 +25,12 @@ class Rooms {
 
         @Serializable
         @Resource("/messages")
-        class Messages(val parent: Id,
-                       val sort: String = "-datetime",
-                       val limit: Int? = null)
+        class Messages(
+            val parent: Id,
+            val sort: SortType = SortType.DATETIME_GREATER,
+            val offset: Int = 0,
+            val limit: Int? = null
+        )
 
         @Serializable
         @Resource("/users")

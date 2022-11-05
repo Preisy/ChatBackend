@@ -14,6 +14,7 @@ object ModelConverter {
             name = dao.name
         )
     }
+
     fun makeDAO(dto: UserDTO): UserDAO {
         if (dto.password == null)
             throw ModelConversionException("To convert DTO to DAO password should be not null")
@@ -30,6 +31,7 @@ object ModelConverter {
             adminId = dao.adminId
         )
     }
+
     fun makeDAO(dto: RoomDTO): RoomDAO {
         return RoomDAO(
             adminId = dto.adminId
@@ -42,15 +44,15 @@ object ModelConverter {
             roomId = dao.roomId,
             memberId = dao.memberId,
             message = dao.message,
-//            datetime = dao.datetime
+            datetime = dao.datetime
         )
     }
+
     fun makeDAO(dto: MessageDTO): MessageDAO {
         return MessageDAO(
             roomId = dto.roomId,
             memberId = dto.memberId,
             message = dto.message,
-//            datetime = dto.datetime
         )
     }
 }

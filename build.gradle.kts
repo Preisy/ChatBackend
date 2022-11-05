@@ -44,12 +44,12 @@ dependencies {
 
 
     /*serialization dependencies*/
+//    implementation("io.ktor:ktor-server-data-conversion:$ktor_version")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposed_version")
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-//    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-//    implementation("org.jetbrains.exposed:exposed-java-time:0.40.1")
-
-//    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.40.1")
-
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")

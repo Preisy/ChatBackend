@@ -36,10 +36,9 @@ class RoomsRepository : Repository<RoomDAO> {
     }
 
 
-
-    override suspend fun add(el: RoomDAO) = dbQueryUnit<RoomDAO> {
+    override suspend fun add(el: RoomDAO) = dbQueryUnit {
         Rooms.insert {
-            it[Rooms.adminId] = el.adminId
+            it[adminId] = el.adminId
         }
     }
 

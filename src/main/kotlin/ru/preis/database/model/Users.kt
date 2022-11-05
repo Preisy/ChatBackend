@@ -1,6 +1,6 @@
 package ru.preis.database.model
 
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Table
 
 object Users : Table() {
     val id = integer("id").autoIncrement()
