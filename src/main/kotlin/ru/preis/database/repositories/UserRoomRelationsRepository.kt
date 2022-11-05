@@ -35,11 +35,12 @@ class UserRoomRelationsRepository : Repository<UserRoomRelationDAO> {
             ?.run(::resultRowToModel)
     }
 
-    override suspend fun add(el: UserRoomRelationDAO) = DatabaseFactory.dbQueryUnit {
-        UserRoomRelations.insert {
+    override suspend fun add(el: UserRoomRelationDAO): UserRoomRelationDAO? = dbQuery {
+        val insertStatement = UserRoomRelations.insert {
             it[roomId] = el.roomId
             it[userId] = el.userId
         }
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToModel)
     }
 
 }

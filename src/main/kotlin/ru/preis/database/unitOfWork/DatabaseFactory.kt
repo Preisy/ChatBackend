@@ -81,14 +81,14 @@ object DatabaseFactory {
                 it[memberId] = 2
                 it[message] = "Hello from Adel!"
                 it[dateTime] = "2010-06-02T22:19:44".toLocalDateTime()
-            } // todo сделать автоматическое добавление админа в комнату
+            }
 
             Rooms.insert {
                 it[id] = 2
                 it[adminId] = 2
             }
             UserRoomRelations.insert {
-                it[roomId] = 1
+                it[roomId] = 2
                 it[userId] = 2
             }
             Messages.insert {

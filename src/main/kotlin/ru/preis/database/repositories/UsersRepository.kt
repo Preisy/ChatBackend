@@ -36,11 +36,12 @@ class UsersRepository : Repository<UserDAO> {
             .singleOrNull()
     }
 
-    override suspend fun add(el: UserDAO) = dbQueryUnit {
-        Users.insert {
+    override suspend fun add(el: UserDAO) = dbQuery {
+        val insertStatement = Users.insert {
             it[name] = el.name
             it[password] = el.password
         }
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToModel)
     }
 
 }

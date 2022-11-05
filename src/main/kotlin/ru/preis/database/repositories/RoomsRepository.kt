@@ -36,10 +36,11 @@ class RoomsRepository : Repository<RoomDAO> {
     }
 
 
-    override suspend fun add(el: RoomDAO) = dbQueryUnit {
-        Rooms.insert {
+    override suspend fun add(el: RoomDAO): RoomDAO? = dbQuery {
+        val insertStatement = Rooms.insert {
             it[adminId] = el.adminId
         }
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToModel)
     }
 
 }

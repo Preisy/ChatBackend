@@ -27,6 +27,7 @@ fun Route.usersInRoomRoute(unitOfWork: UnitOfWork) {
             else
                 ModelConverter.makeDTO(user)
         }
+
         if (res.isEmpty())
             call.response.status(HttpStatusCode.NotFound)
         else

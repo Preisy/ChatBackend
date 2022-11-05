@@ -9,5 +9,5 @@ sealed interface Repository<T : DAOModel> {
 
     suspend fun findFirstOrNull(predicate: (T) -> Boolean): T?
 
-    suspend fun add(el: T)
+    suspend fun add(el: T): T?
 }
