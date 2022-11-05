@@ -8,5 +8,5 @@ import kotlinx.serialization.Serializable
 class UsersResources {
     @Serializable
     @Resource("/{id}")
-    class Id(val parent: UsersResources = UsersResources(), val id: Int)
+    class Id(val parent: UsersResources = UsersResources(), val id: UInt)
 }

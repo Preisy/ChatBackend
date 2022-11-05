@@ -23,7 +23,7 @@ fun Route.usersInRoomRoute(unitOfWork: UnitOfWork) {
                 it.id == userRoom.userId
             }
             if (user == null)
-                UserDAO(id = -1, name = "", password = 0)
+                UserDAO(id = null, name = "", password = 0)
             else
                 ModelConverter.makeDTO(user)
         }

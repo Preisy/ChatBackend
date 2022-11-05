@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MessageDTO(
-    val id: Int? = null,
-    val roomId: Int,
-    val memberId: Int,
+    val id: UInt? = null,
+    val roomId: UInt,
+    val memberId: UInt,
     val message: String,
     val datetime: LocalDateTime? = null
 )

@@ -6,10 +6,11 @@ import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 
+@OptIn(ExperimentalUnsignedTypes::class)
 object Messages : Table() {
-    val id = integer("id").autoIncrement()
-    val roomId = integer("roomId") references Rooms.id
-    val memberId = integer("memberId") references Users.id
+    val id = uinteger("id").autoIncrement()
+    val roomId = uinteger("roomId") references Rooms.id
+    val memberId = uinteger("memberId") references Users.id
     val message = varchar("message", 255)
     val dateTime = datetime("datetime").defaultExpression(CurrentDateTime())
 
@@ -17,9 +18,9 @@ object Messages : Table() {
 }
 
 data class MessageDAO(
-    val id: Int? = null,
-    val roomId: Int,
-    val memberId: Int,
+    val id: UInt? = null,
+    val roomId: UInt,
+    val memberId: UInt,
     val message: String,
     val datetime: LocalDateTime? = null
 ) : DAOModel

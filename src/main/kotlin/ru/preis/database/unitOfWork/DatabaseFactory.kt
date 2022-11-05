@@ -43,57 +43,57 @@ object DatabaseFactory {
         transaction {
             SchemaUtils.create(Users)
             Users.insert {
-                it[id] = 1
+                it[id] = 1u
                 it[name] = "Sirgay"
                 it[password] = "123".hashCode()
             }
             Users.insert {
-                it[id] = 2
+                it[id] = 2u
                 it[name] = "Adel"
                 it[password] = "123".hashCode()
             }
 
             SchemaUtils.create(Rooms)
             Rooms.insert {
-                it[id] = 1
-                it[adminId] = 1
+                it[id] = 1u
+                it[adminId] = 1u
             }
 
             SchemaUtils.create(UserRoomRelations)
             UserRoomRelations.insert {
-                it[roomId] = 1
-                it[userId] = 1
+                it[roomId] = 1u
+                it[userId] = 1u
             }
             UserRoomRelations.insert {
-                it[roomId] = 1
-                it[userId] = 2
+                it[roomId] = 1u
+                it[userId] = 2u
             }
 
             SchemaUtils.create(Messages)
             Messages.insert {
-                it[roomId] = 1
-                it[memberId] = 1
+                it[roomId] = 1u
+                it[memberId] = 1u
                 it[message] = "Hello from Sirgay!"
                 it[dateTime] = "2010-06-01T22:19:44".toLocalDateTime()
             }
             Messages.insert {
-                it[roomId] = 1
-                it[memberId] = 2
+                it[roomId] = 1u
+                it[memberId] = 2u
                 it[message] = "Hello from Adel!"
                 it[dateTime] = "2010-06-02T22:19:44".toLocalDateTime()
             }
 
             Rooms.insert {
-                it[id] = 2
-                it[adminId] = 2
+                it[id] = 2u
+                it[adminId] = 2u
             }
             UserRoomRelations.insert {
-                it[roomId] = 2
-                it[userId] = 2
+                it[roomId] = 2u
+                it[userId] = 2u
             }
             Messages.insert {
-                it[roomId] = 2
-                it[memberId] = 2
+                it[roomId] = 2u
+                it[memberId] = 2u
                 it[message] = "Hello from Adel 2!"
                 it[dateTime] = "2010-06-03T22:19:44".toLocalDateTime()
             }

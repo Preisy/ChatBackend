@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class UserDTO(
-    val id: Int? = null,
+    val id: UInt? = null,
     val name: String,
     @EncodeDefault(EncodeDefault.Mode.NEVER)
     val password: String? = null

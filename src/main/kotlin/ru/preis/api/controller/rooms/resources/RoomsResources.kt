@@ -21,15 +21,15 @@ class Rooms {
 
     @Serializable
     @Resource("/{id}")
-    class Id(val parent: Rooms = Rooms(), val id: Int) {
+    class Id(val parent: Rooms = Rooms(), val id: UInt) {
 
         @Serializable
         @Resource("/messages")
         class Messages(
             val parent: Id,
             val sort: SortType = SortType.DATETIME_GREATER,
-            val offset: Int = 0,
-            val limit: Int? = null
+            val offset: UInt = 0u,
+            val limit: UInt? = null
         )
 
         @Serializable

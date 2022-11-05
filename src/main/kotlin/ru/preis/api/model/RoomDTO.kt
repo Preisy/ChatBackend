@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RoomDTO(
-    val id: Int? = null,
-    val adminId: Int
+    val id: UInt? = null,
+    val adminId: UInt
 )

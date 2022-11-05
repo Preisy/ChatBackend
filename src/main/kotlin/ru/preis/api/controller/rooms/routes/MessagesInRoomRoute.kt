@@ -34,15 +34,15 @@ fun Route.messagesInRoomRoute(unitOfWork: UnitOfWork) {
             ModelConverter.makeDTO(it)
         }.sortedWith(comp)
 
-        if (offset >= messages.size || limit == 0) {
+        if (offset >= messages.size.toUInt() || limit == 0u) {
             call.response.status(HttpStatusCode.RequestedRangeNotSatisfiable)
-            return@get;
+            return@get
         }
 
-        if (limit == null || offset + limit >= messages.size)
-            call.respond(messages.drop(offset))
+        if (limit == null || offset + limit >= messages.size.toUInt())
+            call.respond(messages.drop(offset.toInt()))
         else {
-            val a = messages.slice(offset until (offset + limit))
+            val a = messages.slice(offset.toInt() until (offset + limit).toInt())
             call.respond(a)
         }
     }
