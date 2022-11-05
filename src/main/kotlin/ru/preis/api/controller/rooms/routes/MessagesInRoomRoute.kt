@@ -23,7 +23,7 @@ fun Route.messagesInRoomRoute(unitOfWork: UnitOfWork) {
                 it1.datetime!!.compareTo(it2.datetime!!)
             }
         }
-        val offset = req.offset
+        val offset = req.offset ?: 0u
         val limit = req.limit
 
 
