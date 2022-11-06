@@ -1,1 +1,1 @@
-rootProject.name = "HSTestExercise"
+rootProject.name = "HSTestExercise-backend"

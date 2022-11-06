@@ -1,8 +1,10 @@
 package ru.preis.database.model
 
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 
@@ -12,15 +14,7 @@ object Messages : Table() {
     val roomId = uinteger("roomId") references Rooms.id
     val memberId = uinteger("memberId") references Users.id
     val message = varchar("message", 255)
-    val dateTime = datetime("datetime").defaultExpression(CurrentDateTime())
+    val dateTime = datetime("datetime").clientDefault { Clock.System.now().toLocalDateTime(TimeZone.UTC) }
 
     override val primaryKey = PrimaryKey(id)
 }
-
-data class MessageDAO(
-    val id: UInt? = null,
-    val roomId: UInt,
-    val memberId: UInt,
-    val message: String,
-    val datetime: LocalDateTime? = null
-) : DAOModel

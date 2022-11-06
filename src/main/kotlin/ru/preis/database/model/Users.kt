@@ -9,10 +9,3 @@ object Users : Table() {
     val password = integer("password")
     override val primaryKey = PrimaryKey(id)
 }
-
-
-data class UserDAO(
-    val id: UInt? = null,
-    val name: String,
-    val password: Int
-) : DAOModel

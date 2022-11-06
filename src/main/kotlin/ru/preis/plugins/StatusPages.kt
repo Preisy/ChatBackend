@@ -1,4 +1,4 @@
-package ru.preis.api.plugins
+package ru.preis.plugins
 
 import io.ktor.http.*
 import io.ktor.server.application.*

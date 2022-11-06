@@ -8,8 +8,3 @@ object UserRoomRelations : Table() {
     val userId = uinteger("userId").index() references Users.id
     override val primaryKey = PrimaryKey(roomId, userId)
 }
-
-data class UserRoomRelationDAO(
-    val roomId: UInt,
-    val userId: UInt
-) : DAOModel

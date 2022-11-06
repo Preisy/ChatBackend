@@ -23,10 +23,7 @@ object DatabaseFactory {
     }
 
     suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
-
-    suspend fun dbQueryUnit(block: suspend () -> Unit): Unit =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
+        newSuspendedTransaction { block() }
 
     private fun hikari(): HikariDataSource {
         val config = HikariConfig()
@@ -77,10 +74,10 @@ object DatabaseFactory {
                 it[dateTime] = "2010-06-01T22:19:44".toLocalDateTime()
             }
             Messages.insert {
-                it[roomId] = 1u
-                it[memberId] = 2u
-                it[message] = "Hello from Adel!"
-                it[dateTime] = "2010-06-02T22:19:44".toLocalDateTime()
+                it[Messages.roomId] = 1u
+                it[Messages.memberId] = 2u
+                it[Messages.message] = "Hello from Adel!"
+                it[Messages.dateTime] = "2010-06-02T22:19:44".toLocalDateTime()
             }
 
             Rooms.insert {

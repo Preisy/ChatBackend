@@ -6,46 +6,35 @@ import io.ktor.server.request.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
+import ru.preis.api.controller.rooms.RoomsController
 import ru.preis.api.controller.rooms.resources.Rooms
-import ru.preis.database.model.RoomDAO
-import ru.preis.database.model.UserRoomRelationDAO
-import ru.preis.database.unitOfWork.UnitOfWork
-import ru.preis.ru.preis.api.service.modelConversion.ModelConverter
+import ru.preis.api.sessions.UserSession
 
-fun Route.allRoomsRoute(unitOfWork: UnitOfWork) {
+fun Route.allRoomsRoute(roomsController: RoomsController) {
     get<Rooms> { req ->
         val offset = req.offset ?: 0u
         val limit = req.limit
-        val userId = call.receiveParameters()["userId"]?.toUIntOrNull()
+//        val userId = call.receiveParameters()["userId"]?.toUIntOrNull()
+        var userId = call.sessions.get<UserSession>()!!.userId
         if (userId == null) {
             call.response.status(HttpStatusCode.BadRequest)
             return@get
         }
 
-        val userRoomsIds = unitOfWork.getRepository<UserRoomRelationDAO>().find {
-            it.userId == userId
-        }.map { it.roomId }
-
-        val rooms = unitOfWork.getRepository<RoomDAO>().find {
-            it.id in userRoomsIds
-        }.map {
-            ModelConverter.makeDTO(it)
-        }
+        val rooms = roomsController.findAllRoomsWithUser(userId)
 
         if (rooms.isEmpty()) {
             call.response.status(HttpStatusCode.NotFound)
             return@get
         }
-        if (offset >= rooms.size.toUInt() || limit == 0u) {
-            call.response.status(HttpStatusCode.RequestedRangeNotSatisfiable)
-            return@get
-        }
 
-        if (limit == null || offset + limit >= rooms.size.toUInt())
-            call.respond(rooms.drop(offset.toInt()))
-        else {
-            val a = rooms.slice(offset.toInt() until (offset + limit).toInt())
-            call.respond(a)
+        val res = roomsController.offsetLimit(rooms, offset, limit);
+
+        if (res.isEmpty()) {
+            call.response.status(HttpStatusCode.RequestedRangeNotSatisfiable)
+        } else {
+            call.respond(res);
         }
     }
 }

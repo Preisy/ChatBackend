@@ -1,41 +1,45 @@
 package ru.preis.database.repositories
 
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
-import ru.preis.database.model.UserRoomRelationDAO
+import org.jetbrains.exposed.sql.*
+import ru.preis.api.model.UserRoomRelationModel
 import ru.preis.database.model.UserRoomRelations
-import ru.preis.database.unitOfWork.DatabaseFactory
 import ru.preis.database.unitOfWork.DatabaseFactory.dbQuery
 
-class UserRoomRelationsRepository : Repository<UserRoomRelationDAO> {
-    private fun resultRowToModel(resultRow: ResultRow): UserRoomRelationDAO {
-        return UserRoomRelationDAO(
+class UserRoomRelationsRepository : Repository<UserRoomRelationModel> {
+    private fun resultRowToModel(resultRow: ResultRow): UserRoomRelationModel {
+        return UserRoomRelationModel(
             roomId = resultRow[UserRoomRelations.roomId],
             userId = resultRow[UserRoomRelations.userId]
         )
     }
 
-    override suspend fun find(predicate: (UserRoomRelationDAO) -> Boolean): Iterable<UserRoomRelationDAO> = dbQuery {
-        UserRoomRelations.selectAll()
-            .filter { predicate(resultRowToModel(it)) }
-            .map { resultRowToModel(it) }
+    override suspend fun findAll(
+        predicate: (SqlExpressionBuilder.() -> Op<Boolean>)?
+    ): Iterable<UserRoomRelationModel> = dbQuery {
+        (if (predicate != null)
+            UserRoomRelations.select(predicate)
+        else
+            UserRoomRelations.selectAll()
+                ).map { resultRowToModel(it) }
     }
 
-    override suspend fun findSingleOrNull(predicate: (UserRoomRelationDAO) -> Boolean): UserRoomRelationDAO? = dbQuery {
-        UserRoomRelations.selectAll()
-            .filter { predicate(resultRowToModel(it)) }
+    override suspend fun findSingleOrNull(
+        predicate: SqlExpressionBuilder.() -> Op<Boolean>
+    ): UserRoomRelationModel? = dbQuery {
+        UserRoomRelations.select(predicate)
             .map { resultRowToModel(it) }
             .singleOrNull()
     }
 
-    override suspend fun findFirstOrNull(predicate: (UserRoomRelationDAO) -> Boolean): UserRoomRelationDAO? = dbQuery {
-        UserRoomRelations.selectAll()
-            .firstOrNull { predicate(resultRowToModel(it)) }
+    override suspend fun findFirstOrNull(
+        predicate: SqlExpressionBuilder.() -> Op<Boolean>
+    ): UserRoomRelationModel? = dbQuery {
+        UserRoomRelations.select(predicate)
+            .singleOrNull()
             ?.run(::resultRowToModel)
     }
 
-    override suspend fun add(el: UserRoomRelationDAO): UserRoomRelationDAO? = dbQuery {
+    override suspend fun add(el: UserRoomRelationModel): UserRoomRelationModel? = dbQuery {
         val insertStatement = UserRoomRelations.insert {
             it[roomId] = el.roomId
             it[userId] = el.userId

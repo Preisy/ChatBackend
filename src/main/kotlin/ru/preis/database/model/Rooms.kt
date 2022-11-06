@@ -9,8 +9,3 @@ object Rooms : Table() {
 
     override val primaryKey = PrimaryKey(id)
 }
-
-data class RoomDAO(
-    val id: UInt? = null,
-    var adminId: UInt
-) : DAOModel

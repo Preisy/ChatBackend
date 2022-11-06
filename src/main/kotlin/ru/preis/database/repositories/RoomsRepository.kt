@@ -1,42 +1,45 @@
 package ru.preis.database.repositories
 
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
-import ru.preis.database.model.RoomDAO
+import org.jetbrains.exposed.sql.*
+import ru.preis.api.model.RoomModel
 import ru.preis.database.model.Rooms
 import ru.preis.database.unitOfWork.DatabaseFactory.dbQuery
-import ru.preis.database.unitOfWork.DatabaseFactory.dbQueryUnit
 
-class RoomsRepository : Repository<RoomDAO> {
-    private fun resultRowToModel(resultRow: ResultRow): RoomDAO {
-        return RoomDAO(
+class RoomsRepository : Repository<RoomModel> {
+    private fun resultRowToModel(resultRow: ResultRow): RoomModel {
+        return RoomModel(
             id = resultRow[Rooms.id],
             adminId = resultRow[Rooms.adminId]
         )
     }
 
-    override suspend fun find(predicate: (RoomDAO) -> Boolean): Iterable<RoomDAO> = dbQuery {
-        Rooms.selectAll()
-            .filter { predicate(resultRowToModel(it)) }
-            .map { resultRowToModel(it) }
+    override suspend fun findAll(
+        predicate: (SqlExpressionBuilder.() -> Op<Boolean>)?
+    ): Iterable<RoomModel> = dbQuery {
+        (if (predicate != null)
+            Rooms.select(predicate)
+        else
+            Rooms.selectAll()
+                ).map { resultRowToModel(it) }
     }
 
-    override suspend fun findSingleOrNull(predicate: (RoomDAO) -> Boolean): RoomDAO? = dbQuery {
-        Rooms.selectAll()
-            .filter { predicate(resultRowToModel(it)) }
+    override suspend fun findSingleOrNull(
+        predicate: SqlExpressionBuilder.() -> Op<Boolean>
+    ): RoomModel? = dbQuery {
+        Rooms.select(predicate)
             .map { resultRowToModel(it) }
             .singleOrNull()
     }
 
-    override suspend fun findFirstOrNull(predicate: (RoomDAO) -> Boolean): RoomDAO? = dbQuery {
-        Rooms.selectAll()
-            .firstOrNull { predicate(resultRowToModel(it)) }
+    override suspend fun findFirstOrNull(
+        predicate: SqlExpressionBuilder.() -> Op<Boolean>
+    ): RoomModel? = dbQuery {
+        Rooms.select(predicate)
+            .singleOrNull()
             ?.run(::resultRowToModel)
     }
 
-
-    override suspend fun add(el: RoomDAO): RoomDAO? = dbQuery {
+    override suspend fun add(el: RoomModel): RoomModel? = dbQuery {
         val insertStatement = Rooms.insert {
             it[adminId] = el.adminId
         }

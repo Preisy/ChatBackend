@@ -1,42 +1,46 @@
 package ru.preis.database.repositories
 
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
-import ru.preis.database.model.UserDAO
+import org.jetbrains.exposed.sql.*
+import ru.preis.api.model.UserModel
 import ru.preis.database.model.Users
 import ru.preis.database.unitOfWork.DatabaseFactory.dbQuery
-import ru.preis.database.unitOfWork.DatabaseFactory.dbQueryUnit
 
-class UsersRepository : Repository<UserDAO> {
-    private fun resultRowToModel(resultRow: ResultRow): UserDAO {
-        return UserDAO(
+class UsersRepository : Repository<UserModel> {
+    private fun resultRowToModel(resultRow: ResultRow): UserModel {
+        return UserModel(
             id = resultRow[Users.id],
             name = resultRow[Users.name],
             password = resultRow[Users.password]
         )
     }
 
-    override suspend fun find(predicate: (UserDAO) -> Boolean): Iterable<UserDAO> = dbQuery {
-        Users.selectAll()
-            .filter { predicate(resultRowToModel(it)) }
-            .map { resultRowToModel(it) }
+    override suspend fun findAll(
+        predicate: (SqlExpressionBuilder.() -> Op<Boolean>)?
+    ): Iterable<UserModel> = dbQuery {
+        (if (predicate != null)
+            Users.select(predicate)
+        else
+            Users.selectAll()
+                ).map { resultRowToModel(it) }
     }
 
-    override suspend fun findFirstOrNull(predicate: (UserDAO) -> Boolean): UserDAO? = dbQuery {
-        Users.selectAll()
-            .firstOrNull { predicate(resultRowToModel(it)) }
-            ?.run(::resultRowToModel)
-    }
-
-    override suspend fun findSingleOrNull(predicate: (UserDAO) -> Boolean): UserDAO? = dbQuery {
-        Users.selectAll()
-            .filter { predicate(resultRowToModel(it)) }
+    override suspend fun findSingleOrNull(
+        predicate: SqlExpressionBuilder.() -> Op<Boolean>
+    ): UserModel? = dbQuery {
+        Users.select(predicate)
             .map { resultRowToModel(it) }
             .singleOrNull()
     }
 
-    override suspend fun add(el: UserDAO) = dbQuery {
+    override suspend fun findFirstOrNull(
+        predicate: SqlExpressionBuilder.() -> Op<Boolean>
+    ): UserModel? = dbQuery {
+        Users.select(predicate)
+            .singleOrNull()
+            ?.run(::resultRowToModel)
+    }
+
+    override suspend fun add(el: UserModel) = dbQuery {
         val insertStatement = Users.insert {
             it[name] = el.name
             it[password] = el.password

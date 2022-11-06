@@ -28,9 +28,10 @@ val h2_version: String by project
 
 
 dependencies {
-
-
+    implementation("io.ktor:ktor-server-sessions:$ktor_version")
+    implementation("io.ktor:ktor-server-websockets:$ktor_version")
     implementation("io.ktor:ktor-server-resources:$ktor_version")
+
 
     /*DB dependencies*/
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
@@ -38,14 +39,11 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
 
     implementation("com.h2database:h2:$h2_version")
-
     implementation("com.zaxxer:HikariCP:3.4.2")
     /*DB dependencies*/
 
 
     /*serialization dependencies*/
-//    implementation("io.ktor:ktor-server-data-conversion:$ktor_version")
-
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposed_version")
 
@@ -54,20 +52,16 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("io.ktor:ktor-server-request-validation:$ktor_version")
-
     /*serialization dependencies*/
 
 
+    implementation("io.ktor:ktor-server-cors:$ktor_version")
     implementation("io.ktor:ktor-server-auth:$ktor_version")
-
-
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-http-redirect-jvm:2.1.3")
+    implementation("io.ktor:ktor-server-sessions-jvm:2.1.3")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
-
 }

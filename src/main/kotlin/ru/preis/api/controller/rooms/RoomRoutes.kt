@@ -10,15 +10,13 @@ import ru.preis.api.controller.rooms.routes.usersInRoomRoute
 import ru.preis.database.unitOfWork.UnitOfWork
 
 fun Application.messagingRoutes(unitOfWork: UnitOfWork) {
+    val roomsController = RoomsController(unitOfWork)
     routing {
         authenticate("auth-basic") {
-            allRoomsRoute(unitOfWork)
-            roomByIdRoute(unitOfWork)
+            allRoomsRoute(roomsController)
             newRoom(unitOfWork)
-            usersInRoomRoute(unitOfWork)
-            messagesInRoomRoute(unitOfWork)
-
-
+            usersInRoomRoute(roomsController)
+            messagesInRoomRoute(roomsController)
         }
     }
 }
