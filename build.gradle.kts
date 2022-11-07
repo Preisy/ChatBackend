@@ -2,6 +2,11 @@ val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 
+
+tasks {
+    create("stage").dependsOn("installDist")
+}
+
 plugins {
     application
     kotlin("jvm") version "1.7.20"

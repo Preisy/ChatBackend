@@ -1,0 +1,1 @@
+web: ./build/install/HSTestExercise-backend/bin/HSTestExercise-backend

@@ -12,7 +12,10 @@ import ru.preis.database.unitOfWork.DatabaseFactory
 import ru.preis.plugins.*
 
 fun main() { // todo service не должен принимать DTO
-    embeddedServer(Netty, port = 8086, host = "0.0.0.0") {
+    embeddedServer(Netty,
+//        port = 8086
+        port = System.getenv("PORT").toInt()
+        , host = "0.0.0.0") {
         DatabaseFactory.init()
 
         install(CORS) {
