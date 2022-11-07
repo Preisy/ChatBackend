@@ -2,6 +2,7 @@ package ru.preis
 
 //import com.fasterxml.jackson.databind.SerializationFeature
 //import io.ktor.serialization.jackson.*
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -20,6 +21,9 @@ fun main() { // todo service не должен принимать DTO
 
         install(CORS) {
             anyHost()
+            allowHeader(HttpHeaders.ContentType)
+            allowMethod(HttpMethod.Get)
+            allowMethod(HttpMethod.Post)
         }
 
         configureAuthentication()
