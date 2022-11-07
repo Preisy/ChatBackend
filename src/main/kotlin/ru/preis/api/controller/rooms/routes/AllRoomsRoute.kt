@@ -13,6 +13,7 @@ import ru.preis.api.sessions.UserSession
 
 fun Route.allRoomsRoute(roomsController: RoomsController) {
     get<Rooms> { req ->
+        call.response.status(HttpStatusCode.OK)
         val offset = req.offset ?: 0u
         val limit = req.limit
 //        val userId = call.receiveParameters()["userId"]?.toUIntOrNull()

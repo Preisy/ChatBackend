@@ -12,6 +12,7 @@ import ru.preis.api.view.MessageView
 import ru.preis.api.view.UserView
 import ru.preis.api.sessions.UserSession
 import ru.preis.database.model.Messages
+import ru.preis.database.model.Rooms
 import ru.preis.database.model.UserRoomRelations
 import ru.preis.database.model.Users
 import ru.preis.database.unitOfWork.UnitOfWork
@@ -49,7 +50,7 @@ class RoomsController(
         }.map { it.roomId }
 
         unitOfWork.getRepository<RoomModel>().findAll {
-            UserRoomRelations.roomId inList userRoomsIds
+            Rooms.id inList userRoomsIds
         }.map {
             ModelConverter.makeView(it)
         }

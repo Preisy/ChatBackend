@@ -22,8 +22,12 @@ fun main() { // todo service не должен принимать DTO
         install(CORS) {
             anyHost()
             allowHeader(HttpHeaders.ContentType)
+            allowHeader(HttpHeaders.Authorization)
+            allowHeader(HttpHeaders.ContentType)
+            allowHeader(HttpHeaders.Cookie)
             allowMethod(HttpMethod.Get)
             allowMethod(HttpMethod.Post)
+            allowCredentials = true
         }
 
         configureAuthentication()
