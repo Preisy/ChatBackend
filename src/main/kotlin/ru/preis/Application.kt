@@ -14,8 +14,8 @@ import ru.preis.plugins.*
 
 fun main() { // todo service не должен принимать DTO
     embeddedServer(Netty,
-//        port = 8086
-        port = System.getenv("PORT").toInt()
+        port = 8086
+//        port = System.getenv("PORT").toInt()
         , host = "0.0.0.0") {
         DatabaseFactory.init()
 
@@ -25,8 +25,12 @@ fun main() { // todo service не должен принимать DTO
             allowHeader(HttpHeaders.Authorization)
             allowHeader(HttpHeaders.ContentType)
             allowHeader(HttpHeaders.Cookie)
+            allowHeader(HttpHeaders.AuthenticationInfo)
+            allowHeader(HttpHeaders.SetCookie)
             allowMethod(HttpMethod.Get)
             allowMethod(HttpMethod.Post)
+            allowHeader("user_session")
+            exposeHeader("user_session")
             allowCredentials = true
         }
 

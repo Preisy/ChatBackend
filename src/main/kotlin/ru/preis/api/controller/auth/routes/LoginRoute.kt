@@ -9,15 +9,18 @@ import io.ktor.server.sessions.*
 import ru.preis.api.view.UserView
 import ru.preis.api.controller.auth.AuthenticationController
 import ru.preis.api.sessions.UserSession
+import ru.preis.ru.preis.api.service.modelConversion.ModelConverter
 
 fun Route.loginRoute(auth: AuthenticationController) {
     post("/login") {
-        val user = call.receive<UserView>()
-        val userId = auth.findIdByCredentials(user)
-        if (userId != null) {
-            call.sessions.set(UserSession(userId = userId))
-            call.response.status(HttpStatusCode.OK)
+        val userView = call.receive<UserView>()
+        val userModel = auth.findUserByCredentials(userView)
+        if (userModel?.id != null) {
+            call.sessions.set(UserSession(userId = userModel.id))
+            call.respond(
+                ModelConverter.makeView(userModel)
+            )
         } else
-            call.respond(HttpStatusCode.Conflict, "Invalid credentials")
+            call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")
     }
 }

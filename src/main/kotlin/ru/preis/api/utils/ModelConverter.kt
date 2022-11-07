@@ -6,6 +6,8 @@ import ru.preis.api.model.UserModel
 import ru.preis.api.view.MessageView
 import ru.preis.api.view.RoomView
 import ru.preis.api.view.UserView
+import ru.preis.database.model.Users
+import ru.preis.database.unitOfWork.UnitOfWork
 
 object ModelConverter {
     fun makeView(dao: UserModel): UserView {
@@ -38,11 +40,15 @@ object ModelConverter {
         )
     }
 
-    fun makeView(dao: MessageModel): MessageView {
+    suspend fun makeView(dao: MessageModel, unitOfWork: UnitOfWork = UnitOfWork()): MessageView {
+        var member = unitOfWork.getRepository<UserModel>().findFirstOrNull {
+            Users.id eq dao.memberId
+        }
         return MessageView(
             id = dao.id,
             roomId = dao.roomId,
             memberId = dao.memberId,
+            memberName = member?.name,
             message = dao.message,
             datetime = dao.datetime
         )

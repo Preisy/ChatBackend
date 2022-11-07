@@ -13,7 +13,7 @@ fun Application.configureAuthentication() {
         basic("auth-basic") {
             realm = "Access to the '/' path"
             validate { credentials ->
-                if (authService.findIdByCredentials(
+                if (authService.findUserByCredentials(
                         UserView(
                             name = credentials.name,
                             password = credentials.password

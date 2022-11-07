@@ -11,6 +11,6 @@ fun Route.logoutRoute() {
     post("/logout") {
         call.sessions.clear<UserSession>()
         call.response.status(HttpStatusCode.OK)
-        call.respondRedirect("/login")
+//        call.respondRedirect("/login")
     }
 }

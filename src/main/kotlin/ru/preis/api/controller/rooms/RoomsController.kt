@@ -82,7 +82,7 @@ class RoomsController(
         unitOfWork.getRepository<MessageModel>().findAll {
             Messages.roomId eq roomId
         }.map {
-            ModelConverter.makeView(it)
+            ModelConverter.makeView(it, unitOfWork)
         }.sortedWith(comp)
     }
 }

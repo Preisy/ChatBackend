@@ -25,7 +25,7 @@ fun Route.messagesInRoomRoute(roomsController: RoomsController) {
 
 
         if (messages.isEmpty()) {
-            call.response.status(HttpStatusCode.BadRequest)
+            call.response.status(HttpStatusCode.NotFound)
             return@get
         }
 

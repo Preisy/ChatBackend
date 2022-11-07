@@ -7,15 +7,14 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import ru.preis.api.model.RoomModel
 import ru.preis.api.sessions.UserSession
 import ru.preis.api.view.UserView
 import ru.preis.database.model.Rooms
 import ru.preis.database.unitOfWork.UnitOfWork
 import kotlinx.serialization.*
-import ru.preis.api.view.MessageView
+import ru.preis.api.controller.chat.exceptions.InvalidUserIdException
+import ru.preis.api.controller.chat.exceptions.MemberAlreadyExistsException
 
 
 fun Route.chatSocket(unitOfWork: UnitOfWork) {
@@ -67,7 +66,10 @@ fun Route.chatSocket(unitOfWork: UnitOfWork) {
             incoming.consumeEach{ frame ->
                 try {
                     chatController.transaction(user.id!!, roomId!!, frame)
-                } catch (e: SerializationException) {}
+                } catch (e: SerializationException) {
+                    val a = 0;
+                    e.printStackTrace()
+                }
             }
 
         } catch (e: ClosedReceiveChannelException) {

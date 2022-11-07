@@ -5,18 +5,20 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.post
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import ru.preis.api.model.RoomModel
 import ru.preis.api.model.UserRoomRelationModel
+import ru.preis.api.sessions.UserSession
 import ru.preis.api.view.RoomView
 import ru.preis.database.unitOfWork.UnitOfWork
 import ru.preis.ru.preis.api.service.modelConversion.ModelConverter
 
 fun Route.newRoom(unitOfWork: UnitOfWork) {
     post<Rooms.New> {
-        val room = call.receive<RoomView>()
+        val adminId = call.sessions.get<UserSession>()!!.userId
 
         val res = unitOfWork.getRepository<RoomModel>().add(
-            ModelConverter.makeModel(room)
+            RoomModel(adminId = adminId)
         )
         if (res == null) {
             call.response.status(HttpStatusCode.InsufficientStorage)

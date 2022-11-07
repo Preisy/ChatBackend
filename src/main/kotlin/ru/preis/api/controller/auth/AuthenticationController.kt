@@ -12,23 +12,23 @@ class AuthenticationController(
 ) {
     val unitOfWork = _unitOfWork
 
-    suspend fun findIdByCredentials(user: UserView): UInt? {
+    suspend fun findUserByCredentials(user: UserView): UserModel? {
         val userHashedPassword = user.password.hashCode()
         val res = unitOfWork.getRepository<UserModel>().findSingleOrNull {
             (Users.name eq user.name) and (Users.password eq userHashedPassword)
         }
-        return res?.id
+        return res
     }
 
-    suspend fun signUp(user: UserView): Boolean {
-        val res = unitOfWork.getRepository<UserModel>().findSingleOrNull {
+    suspend fun signUp(user: UserView): UserModel? {
+        val find = unitOfWork.getRepository<UserModel>().findSingleOrNull {
             Users.name eq user.name
         }
-        if (res != null) return false
+        if (find != null) return null
 
-        unitOfWork.getRepository<UserModel>().add(
+        val res = unitOfWork.getRepository<UserModel>().add(
             ModelConverter.makeModel(user)
         )
-        return true
+        return res
     }
 }

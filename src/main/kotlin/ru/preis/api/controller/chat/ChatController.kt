@@ -33,11 +33,14 @@ class ChatController(
 
         val message = Json.decodeFromString<MessageView>(frame.readText())
         if (!validateMessage(message, userId, roomId)) return
+        val model = ModelConverter.makeModel(message);
         unitOfWork.getRepository<MessageModel>().add(
-            ModelConverter.makeModel(message)
+            model
         )
 
-        val str = Json.encodeToString(message)
+        val str = Json.encodeToString(
+            ModelConverter.makeView(model, unitOfWork)
+        )
         sendAll(str)
     }
 
@@ -66,6 +69,12 @@ class ChatController(
         } ?: throw NoSuchElementException()
 
         connectedUsers[user] = socket
+
+        println("----------")
+        for (i in connectedUsers) {
+            println(i.toPair().first)
+        }
+        println("------------")
 
         return user
     }

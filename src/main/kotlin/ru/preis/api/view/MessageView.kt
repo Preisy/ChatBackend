@@ -10,6 +10,8 @@ data class MessageView(
     val id: UInt? = null,
     val roomId: UInt,
     val memberId: UInt,
+    @Optional
+    val memberName: String? = null,
     val message: String,
     @Optional
     val datetime: LocalDateTime? = null
