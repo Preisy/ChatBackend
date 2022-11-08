@@ -17,9 +17,9 @@ fun Route.allRoomsRoute(roomsController: RoomsController) {
         val offset = req.offset ?: 0u
         val limit = req.limit
 //        val userId = call.receiveParameters()["userId"]?.toUIntOrNull()
-        var userId = call.sessions.get<UserSession>()!!.userId
+        var userId = call.sessions.get<UserSession>()?.userId
         if (userId == null) {
-            call.response.status(HttpStatusCode.BadRequest)
+            call.response.status(HttpStatusCode.Forbidden)
             return@get
         }
 
@@ -35,7 +35,7 @@ fun Route.allRoomsRoute(roomsController: RoomsController) {
         if (res.isEmpty()) {
             call.response.status(HttpStatusCode.RequestedRangeNotSatisfiable)
         } else {
-            call.respond(res);
+            call.respond(res)
         }
     }
 }

@@ -34,7 +34,7 @@ class RoomsController(
     }
 
     fun <T> offsetLimit(list: List<T>, offset: UInt, limit: UInt?): List<T> {
-        if (offset >= list.size.toUInt() || limit == 0u)
+        if (offset + (limit ?: 0u) >= list.size.toUInt() || limit == 0u)
             return emptyList()
 
         return if (limit == null || offset + limit >= list.size.toUInt())

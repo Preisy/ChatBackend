@@ -18,11 +18,8 @@ fun Route.usersInRoomRoute(roomsController: RoomsController) {
 
         val res = roomsController.findAllUsersInRoom(roomId)
 
-        if (res.isEmpty())
-            call.response.status(HttpStatusCode.NotFound)
-        else
-            call.respond(
-                res
-            )
+        call.respond(
+            res
+        )
     }
 }

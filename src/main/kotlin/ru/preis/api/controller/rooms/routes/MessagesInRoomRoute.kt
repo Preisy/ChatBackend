@@ -24,11 +24,6 @@ fun Route.messagesInRoomRoute(roomsController: RoomsController) {
         val messages = roomsController.findMessagesInRoom(roomId, comp)
 
 
-        if (messages.isEmpty()) {
-            call.response.status(HttpStatusCode.NotFound)
-            return@get
-        }
-
 
         val res = roomsController.offsetLimit(messages, offset, limit);
 
