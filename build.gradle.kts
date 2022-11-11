@@ -33,6 +33,9 @@ val h2_version: String by project
 
 
 dependencies {
+    implementation("io.ktor:ktor-network-tls-certificates:$ktor_version")
+
+
     implementation("io.ktor:ktor-server-sessions:$ktor_version")
     implementation("io.ktor:ktor-server-websockets:$ktor_version")
     implementation("io.ktor:ktor-server-resources:$ktor_version")

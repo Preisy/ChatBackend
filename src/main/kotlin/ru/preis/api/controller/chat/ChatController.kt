@@ -32,6 +32,7 @@ class ChatController(
         if (frame !is Frame.Text) return
 
         val message = Json.decodeFromString<MessageView>(frame.readText())
+        message.memberId = userId
         if (!validateMessage(message, userId, roomId)) return
         val model = ModelConverter.makeModel(message);
         unitOfWork.getRepository<MessageModel>().add(

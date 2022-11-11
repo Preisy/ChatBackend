@@ -9,7 +9,8 @@ import kotlinx.serialization.Serializable
 data class MessageView(
     val id: UInt? = null,
     val roomId: UInt,
-    val memberId: UInt,
+    @Optional
+    var memberId: UInt? = null,
     @Optional
     val memberName: String? = null,
     val message: String,

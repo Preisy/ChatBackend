@@ -57,7 +57,7 @@ object ModelConverter {
     fun makeModel(dto: MessageView): MessageModel {
         return MessageModel(
             roomId = dto.roomId,
-            memberId = dto.memberId,
+            memberId = dto.memberId!!,
             message = dto.message,
         )
     }

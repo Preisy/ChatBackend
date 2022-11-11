@@ -20,7 +20,7 @@ import ru.preis.api.controller.chat.exceptions.MemberAlreadyExistsException
 fun Route.chatSocket(unitOfWork: UnitOfWork) {
     val chatController = ChatController()
 
-    webSocket("/rooms/{id}/{uId}") {
+    webSocket("/rooms/{id}") {
         val roomId = call.parameters["id"]?.toUIntOrNull()
         if (roomId == null) close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "Room not found"))
         val _room = unitOfWork.getRepository<RoomModel>().findFirstOrNull { Rooms.id eq roomId!! }
@@ -28,13 +28,9 @@ fun Route.chatSocket(unitOfWork: UnitOfWork) {
             close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "Room not found"))
 
 
-
-
         if (call.sessions.get<UserSession>() == null)
             close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "You should be authorized"))
 
-        val uId = call.parameters["uId"]?.toUIntOrNull()
-        var userSession = UserSession(uId!!)
 
         if (_room!!.id != roomId)
             close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "This is inaccessible for you"))
@@ -42,22 +38,21 @@ fun Route.chatSocket(unitOfWork: UnitOfWork) {
         var user = UserView(name = "")
         try {
             user = chatController.onJoin(
-                userSession,
-//                call.sessions.get<UserSession>()!!,
+                call.sessions.get<UserSession>()!!,
                 this
             )
         } catch (e: NoSuchElementException) {
             call.response.status(HttpStatusCode.NotFound)
-            close()
+            close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "No such user"))
         } catch (e: MemberAlreadyExistsException) {
             call.response.status(HttpStatusCode.Conflict)
-            close()
+            close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "Member already exists"))
         } catch (e: InvalidUserIdException) {
             call.response.status(HttpStatusCode.Forbidden)
-            close()
+            close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "Forbidden"))
         } catch (e: Exception) {
             call.response.status(HttpStatusCode.InternalServerError)
-            close()
+            close(CloseReason(CloseReason.Codes.INTERNAL_ERROR, "Internal server error"))
             e.printStackTrace()
         }
 
