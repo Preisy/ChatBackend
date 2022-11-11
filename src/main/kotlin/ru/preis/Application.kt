@@ -56,6 +56,7 @@ fun Application.module() {
         allowHeader(HttpHeaders.SetCookie)
         allowMethod(HttpMethod.Get)
         allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Put)
         allowHeader("user_session")
         exposeHeader("user_session")
         allowCredentials = true

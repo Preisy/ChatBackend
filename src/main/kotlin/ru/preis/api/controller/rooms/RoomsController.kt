@@ -8,9 +8,9 @@ import ru.preis.api.model.MessageModel
 import ru.preis.api.model.RoomModel
 import ru.preis.api.model.UserModel
 import ru.preis.api.model.UserRoomRelationModel
+import ru.preis.api.sessions.UserSession
 import ru.preis.api.view.MessageView
 import ru.preis.api.view.UserView
-import ru.preis.api.sessions.UserSession
 import ru.preis.database.model.Messages
 import ru.preis.database.model.Rooms
 import ru.preis.database.model.UserRoomRelations
@@ -21,6 +21,25 @@ import ru.preis.ru.preis.api.service.modelConversion.ModelConverter
 class RoomsController(
     val unitOfWork: UnitOfWork = UnitOfWork()
 ) {
+
+    suspend fun addUserToRoom(userId: UInt, roomId: UInt): UserRoomRelationModel? {
+        val user = unitOfWork.getRepository<UserModel>().findFirstOrNull {
+            Users.id eq userId
+        }
+        val room = unitOfWork.getRepository<RoomModel>().findFirstOrNull {
+            Rooms.id eq roomId
+        }
+        if (user == null || room == null) {
+            return null;
+        }
+
+        return unitOfWork.getRepository<UserRoomRelationModel>().add(
+            UserRoomRelationModel(
+                roomId, userId
+            )
+        )
+    }
+
     fun defineComp(sortType: SortType) = run {
         when (sortType) {
             SortType.DATETIME_LESS -> { it1: MessageView, it2: MessageView ->
@@ -43,7 +62,7 @@ class RoomsController(
             list.slice(offset.toInt() until (offset + limit).toInt())
         }
     }
-    
+
     suspend fun findAllRoomsWithUser(userId: UInt) = run {
         val userRoomsIds = unitOfWork.getRepository<UserRoomRelationModel>().findAll {
             UserRoomRelations.userId eq userId

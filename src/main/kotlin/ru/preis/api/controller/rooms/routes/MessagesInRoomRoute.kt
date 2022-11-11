@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.preis.api.controller.rooms.RoomsController
 import ru.preis.api.controller.rooms.resources.Rooms
+import ru.preis.api.view.MessageView
 
 fun Route.messagesInRoomRoute(roomsController: RoomsController) {
     get<Rooms.Id.Messages> { req ->
@@ -23,7 +24,10 @@ fun Route.messagesInRoomRoute(roomsController: RoomsController) {
 
         val messages = roomsController.findMessagesInRoom(roomId, comp)
 
-
+        if (messages.isEmpty()) {
+            call.respond(emptyList<MessageView>())
+            return@get
+        }
 
         val res = roomsController.offsetLimit(messages, offset, limit);
 
